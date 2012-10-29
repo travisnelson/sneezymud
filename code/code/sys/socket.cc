@@ -256,7 +256,6 @@ void updateUsagelogs(int count)
 {
   time_t ct=time(0);
   static time_t logtime;
-  static time_t lastlog;
 
   int TIME_BETWEEN_LOGS = 300;
   
@@ -273,7 +272,6 @@ void updateUsagelogs(int count)
     
     if (logtime != 0) logtime += TIME_BETWEEN_LOGS;
     else logtime = ct;
-    lastlog = ct;
     db.query("insert into usagelogs (time, players, port) VALUES(%i, %i, %i)", logtime, count, gamePort);
     // delete logs older than two months
     db.query("insert into usagelogsarchive select * from usagelogs where port=%i and time>%i", gamePort, logtime + 5184000);
@@ -2001,20 +1999,19 @@ static const sstring IP_String(in_addr &_a)
 
 void sig_alrm(int){return;}
 
-void gethostbyaddr_cb(void *arg, int status, struct hostent *host_ent)
+void gethostbyaddr_cb(void *arg, int status, int timeouts, struct hostent *host_ent)
 {
   Descriptor *d;
   Descriptor *d2;
   sstring ip_string, pend_ip_string;
+  (void)timeouts; // unused, added to fix compatibility with my c-ares
 
   ip_string = (char *)arg;
   pend_ip_string = ip_string + "...";
 
   if (status != ARES_SUCCESS) {
-    char *ares_errmem;
 
-    vlogf(LOG_MISC, format("gethostbyaddr_cb: %s: %s") % ip_string % ares_strerror(status, &ares_errmem));
-    ares_free_errmem(ares_errmem);
+    vlogf(LOG_MISC, format("gethostbyaddr_cb: %s: %s") % ip_string % ares_strerror(status));
 
     for (d = descriptor_list; d; d = d2) {
       d2 = d->next;

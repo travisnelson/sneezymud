@@ -269,8 +269,8 @@ int transformLimb(TBeing * caster, const char * buffer, int level, short bKnown)
         return SPELL_CRIT_FAIL;
       default:
         return SPELL_FAIL;
-      caster->sendTo("Nothing seems to happen.\n\r");
-      act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+	// caster->sendTo("Nothing seems to happen.\n\r"); // why after return?
+	// act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM); // why after return?
     }
   }
 }
@@ -579,7 +579,7 @@ struct PolyType ShapeShiftList[LAST_SHAPED_MOB] =
 
 int shapeShift(TBeing *caster, int level, short bKnown)
 {
-  int i, ret = 0;
+  int i;
 //  bool nameFound = FALSE;
   bool found = FALSE;
   TMonster *mob;
@@ -634,7 +634,6 @@ int shapeShift(TBeing *caster, int level, short bKnown)
       case CRIT_S_DOUBLE:
         duration = (2 + level / 5) * Pulse::UPDATES_PER_MUDHOUR;
         CS(SPELL_SHAPESHIFT);
-        ret = SPELL_CRIT_SUCCESS;
       case CRIT_S_NONE:
       default:
         duration = (1 + level / 10) * Pulse::UPDATES_PER_MUDHOUR;

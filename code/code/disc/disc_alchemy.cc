@@ -836,7 +836,6 @@ int TThing::powerstoneMe(TBeing *caster, int, short)
 
 int TOpal::powerstoneMe(TBeing *caster, int, short bKnown)
 {
-  int str;
   sstring buf;
 
   if ((psGetStrength() == psGetCarats()) || (psGetConsecFails() >= 2)) {
@@ -859,7 +858,6 @@ int TOpal::powerstoneMe(TBeing *caster, int, short bKnown)
     // Raise the strength by one.
     psAddStrength(1);
     psSetConsecFails(0);
-    str = psGetStrength();
 
     // **NOTE** If you change this value please aleart the LOWs of it.
 
@@ -1314,7 +1312,7 @@ int detectMagic(TBeing *caster, TBeing * victim, int level, short bKnown)
     }
     // to make compile uncommented 2 lines below
     return SPELL_SUCCESS;
-    victim->affectTo(&aff);
+    // victim->affectTo(&aff); // Why was this thing after a return?
   } else {
     // to make compile uncommented 2 lines below
     caster->nothingHappens();

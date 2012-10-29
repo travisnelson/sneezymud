@@ -107,7 +107,6 @@ const int Pulse::UPDATES_PER_MUDHOUR = (Pulse::MUDHOUR/Pulse::COMBAT);
 // Init sockets, run game, and cleanup sockets 
 int run_the_game()
 {
-  char *ares_errmem;
 
   vlogf(LOG_MISC, "Signal trapping.");
   signalSetup();
@@ -116,8 +115,7 @@ int run_the_game()
   ares_status = ares_init(&channel);
   vlogf(LOG_MISC, "run_the_game: finished calling ares_init");
   if (ares_status != ARES_SUCCESS) {
-    vlogf(LOG_BUG, format("fatal error in ares_init: %s") % ares_strerror(ares_status, &ares_errmem));
-    ares_free_errmem(ares_errmem);
+    vlogf(LOG_BUG, format("fatal error in ares_init: %s") % ares_strerror(ares_status));
     return FALSE;
   }
 
@@ -562,7 +560,6 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
   char lastColor[3];
   const char *codes = NULL;
   const char *codes2 = NULL;
-  int hasLast = FALSE;
   int x = 0;
   personTypeT per;
   const TObj *tobj = NULL;
@@ -634,10 +631,6 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
               lastColor[0] = '<';
               lastColor[1] = *codes2;
               lastColor[2] = '>';
-
-//            sprintf(lastColor, "<%s>", *codes2);
-//            lastColor = codes2;
-            hasLast = TRUE;
           }
         }
 	if (*strp == '$') {
